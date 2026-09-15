@@ -1,5 +1,5 @@
 import { Header } from '../../components/ui/Header'
-import { Button } from '../../components/ui/Button'
+import { Button } from '../../components/ui/button'
 import { Shell } from '../../components/layout/Shell'
 import { Summary } from '../../components/Summary'
 import { getRequest } from '../../store'

@@ -6,6 +6,7 @@ import { RecipientPage } from './features/recipient/RecipientView'
 import { modeFromHash } from './lib/navigation'
 
 export function App() {
+  // TODO: Implement a standard routing sysystem?
   const [route, setRoute] = useState(modeFromHash())
 
   useEffect(() => {
