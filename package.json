@@ -1,0 +1,26 @@
+{
+  "name": "yeah-maybe-date-request",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "format": "prettier --write . --ignore-path .prettierignore",
+    "format:check": "prettier --check . --ignore-path .prettierignore"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "emoji-picker-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "typescript": "latest",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "prettier": "^3.9.6"
+  }
+}
