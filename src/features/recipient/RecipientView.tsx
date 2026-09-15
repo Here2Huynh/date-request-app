@@ -11,7 +11,7 @@ import {
 import { emojiFor } from '../../constants'
 import { PreviewBar } from '../../components/PreviewBar'
 import { Summary } from '../../components/Summary'
-import { Button } from '../../components/ui/Button'
+import { Button } from '../../components/ui/button'
 import { Header } from '../../components/ui/Header'
 import { Shell } from '../../components/layout/Shell'
 
