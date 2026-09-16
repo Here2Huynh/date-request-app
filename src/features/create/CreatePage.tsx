@@ -4,6 +4,8 @@ import { DateAvailabilityEditor } from '../../components/DateAvailabilityEditor'
 import { ChoiceEditor } from '../../components/ChoiceEditor'
 import { Button } from '../../components/ui/button'
 import { Header } from '../../components/ui/Header'
+import { Input } from '../../components/ui/input'
+import { Textarea } from '../../components/ui/textarea'
 import { Shell } from '../../components/layout/Shell'
 import { newId, type RequestData } from '../../store'
 import { go } from '../../lib/navigation'
@@ -57,18 +59,20 @@ export function CreatePage() {
       </p>
       <label>
         Who is this for?
-        <input
+        <Input
           value={data.recipientName}
           onChange={(event) => set('recipientName', event.target.value)}
           placeholder="Their name"
+          autoComplete="name"
         />
       </label>
       <label>
         Set the mood
-        <textarea
+        <Textarea
           value={data.intro}
           onChange={(event) => set('intro', event.target.value)}
           placeholder="A short, sweet message"
+          rows={4}
         />
       </label>
       <ChoiceEditor
