@@ -92,7 +92,7 @@ export function ChoiceEditor({
           </button>
           {showEmojiPicker && (
             <div className="emoji-picker">
-              <EmojiPicker onEmojiClick={chooseEmoji} width="100%" height={350} lazyLoadEmojis />
+              <EmojiPicker onEmojiClick={chooseEmoji} height={350} lazyLoadEmojis />
             </div>
           )}
         </div>

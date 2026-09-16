@@ -13,17 +13,21 @@
     background: #f6eeec;
     font-synthesis: none;
   }
+
   * {
     @apply box-border;
   }
+
   body {
     @apply m-0 min-w-[320px];
   }
+
   button,
   input,
   textarea {
     font: inherit;
   }
+
   button {
     @apply cursor-pointer;
   }
@@ -33,160 +37,236 @@
   .brand {
     @apply mb-7 font-serif text-lg italic text-[#373033];
   }
+
   .paper {
     @apply flex min-h-[580px] w-full flex-col justify-center rounded-[22px] bg-white/85 p-7 text-center shadow-[0_18px_55px_rgba(98,62,62,0.07)] sm:p-10;
   }
+
   .step {
     @apply mb-2 text-[11px] font-bold tracking-[2px] text-[#e27888];
   }
+
   .lead {
     @apply mx-auto mb-6 max-w-[420px] text-[15px] leading-relaxed text-[#6d6264];
   }
+
   .muted,
   .hint {
     @apply text-xs leading-relaxed text-[#978c8d];
   }
+
   .frog {
     @apply mx-auto mb-6 grid h-[84px] w-[84px] place-items-center rounded-[22px] bg-[#f8a1b0] text-[54px];
   }
+
   .success-icon,
   .warning-icon {
     @apply mb-5 text-[44px];
   }
+
   .warning-icon {
     @apply text-[38px];
   }
+
   .actions {
     @apply mt-5 flex w-full flex-col gap-3;
   }
+
   label {
     @apply my-3 block text-left text-[13px] font-bold text-[#64595b];
   }
+
   label small {
     @apply mt-1 block font-normal text-[#a69799];
   }
+
+  input:not([type='checkbox']),
+  textarea {
+    @apply mt-2 w-full rounded-xl border border-[#edd8d9] bg-[#fffaf9] px-3.5 text-sm text-[#403a3b] outline-none transition-all duration-200 placeholder:text-[#b09fa1] hover:border-[#e4b9bd] focus:border-[#e77c8f] focus:bg-white focus:ring-4 focus:ring-[#f9cbd1]/60;
+  }
+
+  input:not([type='checkbox']) {
+    @apply h-12;
+  }
+
+  textarea {
+    @apply min-h-20 resize-y py-3 leading-relaxed;
+  }
+
+  input[type='date'] {
+    @apply px-3;
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    @apply cursor-pointer opacity-60;
+  }
+
   .editor {
     @apply my-5 text-left;
   }
+
   .chips {
     @apply flex flex-wrap gap-2;
   }
+
   .chip {
     @apply rounded-full border border-[#f0d7d9] bg-[#fff7f7] px-3 py-2 text-xs text-[#6b5d60];
   }
+
   .chip.chosen,
   .option.selected {
     @apply border-[#ef8294] bg-[#f9cbd1] text-[#542f36];
   }
+
   .toggle {
     @apply mt-6 flex items-center gap-2 font-normal;
   }
+
   .toggle input {
     @apply m-0 h-[18px] w-[18px] accent-[#ed5c77];
   }
+
   .yesno {
     @apply my-5 flex items-center justify-center gap-3 sm:gap-7;
   }
+
   .no-button {
     @apply min-w-[94px] rounded-full border border-[#eaa4ad] bg-transparent px-6 py-4 text-[#574b4d] transition-transform;
   }
+
   .option-grid {
     @apply my-5 mb-7 grid grid-cols-3 gap-2.5;
   }
+
   .option {
     @apply min-h-[92px] rounded-2xl border border-[#f0dadd] bg-[#fff6f6] px-2 py-4 text-[13px] font-bold text-[#5a4e50];
   }
+
   .option span {
     @apply mb-2 block text-[30px];
   }
+
   .summary {
     @apply my-3 rounded-2xl bg-[#fff5f4] px-4 py-2 text-left;
   }
+
   .summary div {
     @apply flex items-center justify-between gap-4 border-b border-[#f1dfe0] py-3.5;
   }
+
   .summary div:last-child {
     @apply border-0;
   }
+
   .summary span {
     @apply text-[10px] font-bold tracking-[1.5px] text-[#c48289];
   }
+
   .summary strong {
     @apply text-right text-sm;
   }
+
   .linkbox {
     @apply break-all rounded-xl border border-dashed border-[#e797a1] bg-[#fff4f3] p-3.5 text-left text-xs text-[#9a646b];
   }
+
   .status {
     @apply mt-5 rounded-xl bg-[#fbd5d9] p-4 font-bold text-[#703b45];
   }
+
   .status.waiting {
     @apply bg-[#fff4d8] text-[#876e39];
   }
+
   .previewbar {
     @apply mt-6 border-t border-[#f1dcdd] pt-3 text-[10px] font-bold tracking-[1px] text-[#d26a7a];
   }
+
   .previewbar button {
     @apply ml-2 bg-transparent text-[11px] font-normal text-[#8c7779] underline;
   }
+
   .custom-option {
     @apply relative mt-2.5 flex gap-2;
   }
+
   .custom-option input {
-    @apply mt-0;
+    @apply mt-0 min-w-0 flex-1;
   }
+
+  .custom-option input:focus {
+    @apply ring-2;
+  }
+
   .add-button,
   .emoji-button {
     @apply rounded-xl border border-[#eaa4ad] bg-[#fff7f7] font-bold text-[#c65c6e];
   }
+
   .add-button {
     @apply px-4;
   }
+
   .emoji-button {
-    @apply w-12 text-xl;
+    @apply w-12 shrink-0 text-xl;
   }
+
   .emoji-picker {
     @apply absolute left-0 top-[54px] z-10 w-full max-w-[320px] overflow-hidden rounded-2xl shadow-[0_12px_30px_rgba(74,40,45,0.2)];
   }
+
   .mode-switch {
     @apply my-3 flex gap-2;
   }
+
   .mode {
     @apply flex-1 rounded-xl border border-[#e8cfd1] bg-[#fff7f7] p-2.5 text-xs font-bold text-[#8a7174];
   }
+
   .mode.active {
     @apply border-[#ef8294] bg-[#f9cbd1] text-[#542f36];
   }
+
   .range-fields {
     @apply grid grid-cols-2 gap-2.5;
   }
+
   .range-fields label {
     @apply m-0;
   }
+
   .date-add {
     @apply flex gap-2;
   }
+
   .date-add input {
     @apply mt-0;
   }
+
   .date-add .add-button {
     @apply whitespace-nowrap;
   }
+
   .date-chips {
     @apply mt-2.5;
   }
+
   main {
     @apply flex min-h-screen flex-col items-center px-2.5 pb-5 pt-7 sm:px-4 sm:pb-7 sm:pt-12;
   }
-  main > .paper {
+
+  main>.paper {
     @apply max-w-[560px];
   }
+
   .dots {
     @apply mt-6 flex gap-1.5;
   }
+
   .dots i {
     @apply h-1.5 w-1.5 rounded-full bg-[#edd6d7];
   }
+
   .dots .active {
     @apply w-6 bg-[#f05c78];
   }
