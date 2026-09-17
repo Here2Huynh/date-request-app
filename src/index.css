@@ -198,6 +198,46 @@
     @apply ring-2;
   }
 
+  .time-add {
+    @apply flex gap-2;
+  }
+
+  .time-input-wrap {
+    @apply flex min-w-0 flex-1 items-center rounded-xl border border-[#edd8d9] bg-[#fffaf9] transition-all duration-200;
+  }
+
+  .time-input-wrap:focus-within {
+    @apply border-[#e77c8f] bg-white ring-4 ring-[#f9cbd1]/60;
+  }
+
+  .time-input-wrap span {
+    @apply pl-3.5 text-xl leading-none text-[#e27888];
+  }
+
+  .time-input-wrap input {
+    @apply m-0 h-12 border-0 bg-transparent px-2.5 shadow-none ring-0 focus:border-0 focus:bg-transparent focus:ring-0;
+  }
+
+  .time-add-button {
+    @apply whitespace-nowrap px-4;
+  }
+
+  .time-add-button:disabled {
+    @apply cursor-not-allowed border-[#f0dfe0] bg-[#faf4f3] text-[#c5b4b5];
+  }
+
+  .time-chips {
+    @apply mt-3 flex flex-wrap gap-2;
+  }
+
+  .time-chip {
+    @apply flex items-center gap-1 rounded-full border border-[#f0d7d9] bg-[#fff7f7] pl-3 text-xs font-bold text-[#6b5d60];
+  }
+
+  .time-chip button {
+    @apply grid h-7 w-7 place-items-center rounded-full text-base font-normal text-[#c77983] transition-colors hover:bg-[#f9cbd1] hover:text-[#542f36];
+  }
+
   .add-button,
   .emoji-button {
     @apply rounded-xl border border-[#eaa4ad] bg-[#fff7f7] font-bold text-[#c65c6e];
@@ -255,7 +295,7 @@
     @apply flex min-h-screen flex-col items-center px-2.5 pb-5 pt-7 sm:px-4 sm:pb-7 sm:pt-12;
   }
 
-  main>.paper {
+  main > .paper {
     @apply max-w-[560px];
   }
 

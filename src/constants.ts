@@ -30,7 +30,6 @@ export const demoRequest: RequestData = {
 
 export const activityOptions = ['Movie', 'Walk', 'Museum', 'Mini golf', 'Coffee', 'Concert']
 export const foodOptions = ['Pizza', 'Sushi', 'Burgers', 'Pasta', 'Tacos', 'Ramen']
-export const timeOptions = ['18:00', '19:30', '20:00']
 
 export function emojiFor(data: RequestData, value: string) {
   return data.customEmojis?.[value] || emojis[value] || '♡'
