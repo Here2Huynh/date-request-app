@@ -115,6 +115,7 @@ export function RecipientView({
         <p className="lead">{data.intro || 'I have a very important question for you...'}</p>
         <div className="yesno">
           <Button onClick={next}>YES, obviously</Button>
+          {/* TODO: Make the no button run away from the mouse */}
           <button
             className="no-button"
             style={{

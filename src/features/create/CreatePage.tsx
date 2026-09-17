@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { activityOptions, demoRequest, foodOptions, timeOptions } from '../../constants'
+import { activityOptions, demoRequest, foodOptions } from '../../constants'
 import { DateAvailabilityEditor } from '../../components/DateAvailabilityEditor'
 import { ChoiceEditor } from '../../components/ChoiceEditor'
+import { TimeEditor } from '../../components/TimeEditor'
 import { Button } from '../../components/ui/button'
 import { Header } from '../../components/ui/Header'
 import { Input } from '../../components/ui/input'
@@ -18,7 +19,7 @@ export function CreatePage() {
     } catch {
       // Fall back to a clean editor if draft storage is unavailable or malformed.
     }
-    return { ...demoRequest, id: newId(), recipientName: '', intro: '' }
+    return { ...demoRequest, id: newId(), recipientName: '', intro: '', times: [] }
   })
   const rangeMode = Boolean(data.dateRange)
   const valid =
@@ -100,17 +101,9 @@ export function CreatePage() {
         onDatesChange={(dates) => setData((current) => ({ ...current, dates }))}
         onRangeChange={(dateRange) => setData((current) => ({ ...current, dateRange }))}
       />
-      <ChoiceEditor
-        title="Offer times"
-        values={timeOptions}
+      <TimeEditor
         selected={data.times}
-        onToggle={(value) => toggle('times', value)}
-        format={(value) =>
-          new Date(`2026-01-01T${value}`).toLocaleTimeString([], {
-            hour: 'numeric',
-            minute: '2-digit',
-          })
-        }
+        onChange={(times) => setData((current) => ({ ...current, times }))}
       />
       <label className="toggle">
         <input
