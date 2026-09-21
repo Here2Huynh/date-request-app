@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState, type MouseEvent } from 'react'
 import {
   datesBetween,
   dateLabel,
@@ -31,6 +31,13 @@ export function RecipientPage({ id }: { id: string }) {
   return <RecipientView data={request} />
 }
 
+// TODO: No change no button label, instead turns disabled
+// TODO: Allow them to choose a few default meme faces for the portrait
+
+// TODO: Cycle through hint options in order
+
+const HINT_OPTIONS = ['Choose wisely', 'WOWWW', 'The button has boundaries.']
+
 export function RecipientView({
   data,
   preview = false,
@@ -46,7 +53,48 @@ export function RecipientView({
   const [selection, setSelection] = useState({ date: '', time: '', activity: '', food: '' })
   const [declined, setDeclined] = useState(false)
   const [noCount, setNoCount] = useState(0)
+  const [noPosition, setNoPosition] = useState({ x: 0, y: 0 })
+  const yesButtonRef = useRef<HTMLButtonElement>(null)
+  const noButtonRef = useRef<HTMLButtonElement>(null)
   const next = () => setStep((current) => current + 1)
+  const dodgeNoButton = (event: MouseEvent<HTMLButtonElement>) => {
+    const button = noButtonRef.current
+    const yesButton = yesButtonRef.current
+    if (!button || !yesButton) return
+
+    const buttonRect = button.getBoundingClientRect()
+    const { width, height } = buttonRect
+    const yesRect = yesButton.getBoundingClientRect()
+    const padding = 12
+    const maxLeft = Math.max(padding, window.innerWidth - width - padding)
+    const maxTop = Math.max(padding, window.innerHeight - height - padding)
+    const baseLeft = buttonRect.left - noPosition.x
+    const baseTop = buttonRect.top - noPosition.y
+    const overlaps = (left: number, top: number, rect: DOMRect, margin = 0) =>
+      left < rect.right + margin &&
+      left + width > rect.left - margin &&
+      top < rect.bottom + margin &&
+      top + height > rect.top - margin
+
+    const candidates = Array.from({ length: 24 }, () => ({
+      left: Math.round(padding + Math.random() * (maxLeft - padding)),
+      top: Math.round(padding + Math.random() * (maxTop - padding)),
+    }))
+    candidates.push(
+      { left: padding, top: padding },
+      { left: maxLeft, top: padding },
+      { left: padding, top: maxTop },
+      { left: maxLeft, top: maxTop },
+    )
+    const pointerRect = new DOMRect(event.clientX - 24, event.clientY - 24, 48, 48)
+    const nextPosition = candidates.find(
+      ({ left, top }) =>
+        !overlaps(left, top, yesRect, 12) && !overlaps(left, top, pointerRect),
+    ) ?? { left: padding, top: padding }
+
+    setNoCount((current) => current + 1)
+    setNoPosition({ x: nextPosition.left - baseLeft, y: nextPosition.top - baseTop })
+  }
   const submit = () => {
     if (!preview) {
       updateRequest({ ...data, response: { ...selection, declined } })
@@ -114,14 +162,14 @@ export function RecipientView({
         <Header step="A VERY IMPORTANT QUESTION" title="Will you go on a" accent="date with me?" />
         <p className="lead">{data.intro || 'I have a very important question for you...'}</p>
         <div className="yesno">
-          <Button onClick={next}>YES, obviously</Button>
-          {/* TODO: Make the no button run away from the mouse */}
+          <Button ref={yesButtonRef} onClick={next}>
+            YES, obviously
+          </Button>
           <button
+            ref={noButtonRef}
             className="no-button"
-            style={{
-              transform: `translate(${noCount ? (noCount % 2 ? 24 : -16) : 0}px, ${noCount ? -8 : 0}px)`,
-            }}
-            onMouseEnter={() => setNoCount((current) => current + 1)}
+            style={{ transform: `translate(${noPosition.x}px, ${noPosition.y}px)` }}
+            onMouseEnter={dodgeNoButton}
             onClick={() => {
               setDeclined(true)
               next()
