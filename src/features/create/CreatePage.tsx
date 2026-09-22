@@ -24,9 +24,7 @@ export function CreatePage() {
   const rangeMode = Boolean(data.dateRange)
   const valid =
     data.recipientName.trim() &&
-    (rangeMode
-      ? data.dateRange?.start && data.dateRange?.end && data.dateRange.start <= data.dateRange.end
-      : data.dates.length) &&
+    (rangeMode || data.dates.length) &&
     data.times.length &&
     data.activities.length &&
     data.foods.length
