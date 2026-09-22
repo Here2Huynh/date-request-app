@@ -159,8 +159,7 @@ export function RecipientView({
     return (
       <Shell>
         <div className="frog">🐸</div>
-        <Header step="A VERY IMPORTANT QUESTION" title="Will you go on a" accent="date with me?" />
-        <p className="lead">{data.intro || 'I have a very important question for you...'}</p>
+        <p className="question-label">{data.intro}</p>
         <div className="yesno">
           <Button ref={yesButtonRef} onClick={next}>
             YES, obviously
