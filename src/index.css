@@ -136,7 +136,7 @@
   }
 
   .no-button {
-    @apply min-w-[94px] rounded-full border border-[#eaa4ad] bg-transparent px-6 py-4 text-[#574b4d] transition-transform;
+    @apply min-h-12 w-[94px] rounded-full border border-[#eaa4ad] bg-transparent px-6 py-0 text-[#574b4d] transition-transform;
   }
 
   .option-grid {

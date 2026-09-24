@@ -162,8 +162,8 @@ export function RecipientView({
         <div className="frog">🐸</div>
         <p className="question-label">{data.intro}</p>
         <div className="yesno">
-          <Button ref={yesButtonRef} onClick={next}>
-            YES, obviously
+          <Button className="w-[94px]" ref={yesButtonRef} onClick={next}>
+            Yes
           </Button>
           <button
             ref={noButtonRef}
