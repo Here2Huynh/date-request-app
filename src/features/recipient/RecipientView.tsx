@@ -33,8 +33,6 @@ export function RecipientPage({ id }: { id: string }) {
 
 // TODO: Allow them to choose a few default meme faces for the portrait
 
-// TODO: Cycle through hint options in order
-
 const HINT_OPTIONS = ['Choose wisely', 'WOWWW', 'The button has boundaries.']
 
 export function RecipientView({
@@ -51,7 +49,7 @@ export function RecipientView({
   const [step, setStep] = useState(0)
   const [selection, setSelection] = useState({ date: '', time: '', activity: '', food: '' })
   const [declined, setDeclined] = useState(false)
-  const [noCount, setNoCount] = useState(0)
+  const [hintIndex, setHintIndex] = useState(0)
   const [noPosition, setNoPosition] = useState({ x: 0, y: 0 })
   const yesButtonRef = useRef<HTMLButtonElement>(null)
   const noButtonRef = useRef<HTMLButtonElement>(null)
@@ -93,7 +91,7 @@ export function RecipientView({
         !overlaps(left, top, yesRect, 12) && !overlaps(left, top, pointerRect),
     ) ?? { left: minLeft, top: minTop }
 
-    setNoCount((current) => current + 1)
+    setHintIndex((current) => Math.min(current + 1, HINT_OPTIONS.length - 1))
     setNoPosition({ x: nextPosition.left - baseLeft, y: nextPosition.top - baseTop })
   }
   const submit = () => {
@@ -178,7 +176,7 @@ export function RecipientView({
             no
           </button>
         </div>
-        <p className="hint">{noCount ? 'the button has boundaries.' : 'choose wisely'}</p>
+        <p className="hint">{HINT_OPTIONS[hintIndex]}</p>
         {preview && <PreviewBar onBack={onBack} />}
       </Shell>
     )
