@@ -1,4 +1,4 @@
-export function Header({ step, title, accent }: { step?: string; title: string; accent?: string }) {
+export function Header({ step, title, accent }: { step?: string; title?: string; accent?: string }) {
   return (
     <>
       <p className="step">{step}</p>

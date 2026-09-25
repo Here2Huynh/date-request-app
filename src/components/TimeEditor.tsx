@@ -54,6 +54,7 @@ export function TimeEditor({
           Add time
         </button>
       </div>
+      {/* TODO:  Make the time chips highlight darker like the other selected chips */}
       {selected.length > 0 && (
         <div className="time-chips" aria-label="Selected offer times">
           {selected.map((value) => (

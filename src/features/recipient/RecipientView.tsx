@@ -31,10 +31,7 @@ export function RecipientPage({ id }: { id: string }) {
   return <RecipientView data={request} />
 }
 
-// TODO: No change no button label, instead turns disabled
 // TODO: Allow them to choose a few default meme faces for the portrait
-
-// TODO: Cycle through hint options in order
 
 const HINT_OPTIONS = ['Choose wisely', 'WOWWW', 'The button has boundaries.']
 
@@ -52,7 +49,7 @@ export function RecipientView({
   const [step, setStep] = useState(0)
   const [selection, setSelection] = useState({ date: '', time: '', activity: '', food: '' })
   const [declined, setDeclined] = useState(false)
-  const [noCount, setNoCount] = useState(0)
+  const [hintIndex, setHintIndex] = useState(0)
   const [noPosition, setNoPosition] = useState({ x: 0, y: 0 })
   const yesButtonRef = useRef<HTMLButtonElement>(null)
   const noButtonRef = useRef<HTMLButtonElement>(null)
@@ -66,8 +63,10 @@ export function RecipientView({
     const { width, height } = buttonRect
     const yesRect = yesButton.getBoundingClientRect()
     const padding = 12
-    const maxLeft = Math.max(padding, window.innerWidth - width - padding)
-    const maxTop = Math.max(padding, window.innerHeight - height - padding)
+    const maxLeft = Math.max(0, window.innerWidth - width)
+    const maxTop = Math.max(0, window.innerHeight - height)
+    const minLeft = Math.min(padding, maxLeft)
+    const minTop = Math.min(padding, maxTop)
     const baseLeft = buttonRect.left - noPosition.x
     const baseTop = buttonRect.top - noPosition.y
     const overlaps = (left: number, top: number, rect: DOMRect, margin = 0) =>
@@ -77,22 +76,22 @@ export function RecipientView({
       top + height > rect.top - margin
 
     const candidates = Array.from({ length: 24 }, () => ({
-      left: Math.round(padding + Math.random() * (maxLeft - padding)),
-      top: Math.round(padding + Math.random() * (maxTop - padding)),
+      left: Math.round(minLeft + Math.random() * (maxLeft - minLeft)),
+      top: Math.round(minTop + Math.random() * (maxTop - minTop)),
     }))
     candidates.push(
-      { left: padding, top: padding },
-      { left: maxLeft, top: padding },
-      { left: padding, top: maxTop },
+      { left: minLeft, top: minTop },
+      { left: maxLeft, top: minTop },
+      { left: minLeft, top: maxTop },
       { left: maxLeft, top: maxTop },
     )
     const pointerRect = new DOMRect(event.clientX - 24, event.clientY - 24, 48, 48)
     const nextPosition = candidates.find(
       ({ left, top }) =>
         !overlaps(left, top, yesRect, 12) && !overlaps(left, top, pointerRect),
-    ) ?? { left: padding, top: padding }
+    ) ?? { left: minLeft, top: minTop }
 
-    setNoCount((current) => current + 1)
+    setHintIndex((current) => Math.min(current + 1, HINT_OPTIONS.length - 1))
     setNoPosition({ x: nextPosition.left - baseLeft, y: nextPosition.top - baseTop })
   }
   const submit = () => {
@@ -159,11 +158,10 @@ export function RecipientView({
     return (
       <Shell>
         <div className="frog">🐸</div>
-        <Header step="A VERY IMPORTANT QUESTION" title="Will you go on a" accent="date with me?" />
-        <p className="lead">{data.intro || 'I have a very important question for you...'}</p>
+        <p className="question-label">{data.intro}</p>
         <div className="yesno">
-          <Button ref={yesButtonRef} onClick={next}>
-            YES, obviously
+          <Button className="w-[94px]" ref={yesButtonRef} onClick={next}>
+            Yes
           </Button>
           <button
             ref={noButtonRef}
@@ -175,10 +173,10 @@ export function RecipientView({
               next()
             }}
           >
-            {noCount < 3 ? 'no' : 'okay, no pressure'}
+            no
           </button>
         </div>
-        <p className="hint">{noCount ? 'the button has boundaries.' : 'choose wisely'}</p>
+        <p className="hint">{HINT_OPTIONS[hintIndex]}</p>
         {preview && <PreviewBar onBack={onBack} />}
       </Shell>
     )
