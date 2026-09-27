@@ -87,8 +87,7 @@ export function RecipientView({
     )
     const pointerRect = new DOMRect(event.clientX - 24, event.clientY - 24, 48, 48)
     const nextPosition = candidates.find(
-      ({ left, top }) =>
-        !overlaps(left, top, yesRect, 12) && !overlaps(left, top, pointerRect),
+      ({ left, top }) => !overlaps(left, top, yesRect, 12) && !overlaps(left, top, pointerRect),
     ) ?? { left: minLeft, top: minTop }
 
     setHintIndex((current) => Math.min(current + 1, HINT_OPTIONS.length - 1))
@@ -97,10 +96,10 @@ export function RecipientView({
   const submit = () => {
     if (!preview) {
       updateRequest({ ...data, response: { ...selection, declined } })
-      setStep(5)
-    } else setStep(5)
+      setStep(6)
+    } else setStep(6)
   }
-  if (step === 5) {
+  if (step === 6) {
     if (declined)
       return (
         <Shell>
@@ -119,7 +118,7 @@ export function RecipientView({
       />
     )
   }
-  if (step === 4 && data.cancellationWarning)
+  if (step === 5 && data.cancellationWarning)
     return (
       <Shell>
         <div className="warning-icon">⚠️</div>
@@ -133,21 +132,21 @@ export function RecipientView({
         </p>
         <div className="actions">
           <Button onClick={submit}>I accept the imaginary terms</Button>
-          <Button secondary onClick={() => setStep(3)}>
+          <Button secondary onClick={() => setStep(4)}>
             Let me reconsider
           </Button>
         </div>
         {preview && <PreviewBar onBack={onBack} onSend={onSend} />}
       </Shell>
     )
-  if (step === 4)
+  if (step === 5)
     return (
       <Shell>
         <Header step="LAST LOOK" title="Ready to" accent="lock it in?" />
         <Summary data={data} selection={selection} />
         <div className="actions">
           <Button onClick={submit}>Submit my answer ♥</Button>
-          <Button secondary onClick={() => setStep(3)}>
+          <Button secondary onClick={() => setStep(4)}>
             Change something
           </Button>
         </div>
@@ -160,7 +159,7 @@ export function RecipientView({
         <div className="frog">🐸</div>
         <p className="question-label">{data.intro}</p>
         <div className="yesno">
-          <Button className="w-[94px]" ref={yesButtonRef} onClick={next}>
+          <Button className="w-23.5" ref={yesButtonRef} onClick={next}>
             Yes
           </Button>
           <button
@@ -170,7 +169,7 @@ export function RecipientView({
             onMouseEnter={dodgeNoButton}
             onClick={() => {
               setDeclined(true)
-              next()
+              setStep(6)
             }}
           >
             no
@@ -180,24 +179,32 @@ export function RecipientView({
         {preview && <PreviewBar onBack={onBack} />}
       </Shell>
     )
+  if (step === 1)
+    return (
+      <Shell>
+        <p className="question-label">Waittt, you actually said yes?!</p>
+        <p className="lead">I was so ready for you to say no 😂</p>
+        <Button onClick={next}>Ok, cool!</Button>
+        {preview && <PreviewBar onBack={onBack} />}
+      </Shell>
+    )
   const titles = [
     ['So... when are you', 'free?'],
     ['What are we', 'doing?'],
     ['And what are we', 'eating?'],
-    ['One last thing...', ''],
-  ][step - 1]
+  ][step - 2]
   const options =
-    step === 1
+    step === 2
       ? data.dateRange
         ? datesBetween(data.dateRange.start, data.dateRange.end)
         : data.dates
-      : step === 2
+      : step === 3
         ? data.activities
         : data.foods
-  const key = step === 1 ? 'date' : step === 2 ? 'activity' : 'food'
+  const key = step === 2 ? 'date' : step === 3 ? 'activity' : 'food'
   return (
     <Shell>
-      <Header step={`STEP ${step} OF 4`} title={titles[0]} accent={titles[1]} />
+      <Header step={`STEP ${step - 1} OF 3`} title={titles[0]} accent={titles[1]} />
       <div className="option-grid">
         {options.map((value) => (
           <button
@@ -205,13 +212,13 @@ export function RecipientView({
             key={value}
             onClick={() => setSelection({ ...selection, [key]: value })}
           >
-            <span>{step === 1 ? '♡' : emojiFor(data, value)}</span>
-            {step === 1 ? dateLabel(value) : value}
+            <span>{step === 2 ? '♡' : emojiFor(data, value)}</span>
+            {step === 2 ? dateLabel(value) : value}
           </button>
         ))}
       </div>
       <Button disabled={!selection[key]} onClick={next}>
-        {step === 3 ? 'Continue' : 'Lock it in ♥'}
+        {step === 4 ? 'Continue' : 'Lock it in ♥'}
       </Button>
       {preview && <PreviewBar onBack={onBack} onSend={onSend} />}
     </Shell>
