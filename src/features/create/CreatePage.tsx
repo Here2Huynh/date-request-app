@@ -52,9 +52,9 @@ export function CreatePage() {
 
   return (
     <Shell>
-      <Header step="CREATE YOUR REQUEST" title="Plan a little" accent="something cute." />
+      <Header step="CREATE YOUR DATE REQUEST" title="Plan a little" accent="something cute." />
       <p className="lead">
-        Build a date request that is impossible to ignore (in a very charming way).
+        Build a date request that is impossible to ignore.
       </p>
       <label>
         Who is this for?
