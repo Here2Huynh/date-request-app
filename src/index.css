@@ -236,7 +236,7 @@
   }
 
   .time-chip {
-    @apply flex items-center gap-1 rounded-full border border-[#f0d7d9] bg-[#fff7f7] pl-3 text-xs font-bold text-[#6b5d60];
+    @apply flex items-center gap-1 rounded-full border border-[#ef8294] bg-[#f9cbd1] pl-3 text-xs font-bold text-[#542f36];
   }
 
   .time-chip button {
