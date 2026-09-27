@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react'
+import { emojis } from '../constants'
 
 export function ChoiceEditor({
   title,
@@ -50,7 +51,7 @@ export function ChoiceEditor({
             className={selected.includes(value) ? 'chip chosen' : 'chip'}
             onClick={() => onToggle(value)}
           >
-            {customEmojis[value] || '♡'} {format(value)}
+            {customEmojis[value] || emojis[value] || '♡'} {format(value)}
           </button>
         ))}
         {selected
