@@ -122,16 +122,12 @@ export function RecipientView({
     return (
       <Shell>
         <div className="warning-icon">⚠️</div>
-        <Header step="OPTIONAL FINE PRINT" title="Before you" accent="commit..." />
+        <Header step="CANCELLATION FEE" />
         <p className="lead">
-          By proceeding, you acknowledge that cancelling after this point may result in a totally
-          fictional <strong>$300 cancellation fee</strong>.
-        </p>
-        <p className="muted">
-          This is a joke. There is no fee, no invoice, and no tiny lawyer hiding nearby.
+          By proceeding, you acknowledge that cancelling after this point will result in a <strong>$300 cancellation fee</strong>.
         </p>
         <div className="actions">
-          <Button onClick={submit}>I accept the imaginary terms</Button>
+          <Button onClick={submit}>Accept terms & confirm</Button>
           <Button secondary onClick={() => setStep(4)}>
             Let me reconsider
           </Button>
