@@ -99,6 +99,17 @@ export function RecipientView({
       setStep(6)
     } else setStep(6)
   }
+  if (step === 7)
+    return (
+      <Shell>
+        <div className="frog" role="img" aria-label="Happy frog">
+          <span aria-hidden="true">&#x1F438;</span>
+        </div>
+        <Header step="Well, then." />
+        <p className="lead">You're paying 😛</p>
+        {preview && <PreviewBar onBack={onBack} onSend={onSend} />}
+      </Shell>
+    )
   if (step === 6) {
     if (declined)
       return (
@@ -122,17 +133,13 @@ export function RecipientView({
     return (
       <Shell>
         <div className="warning-icon">⚠️</div>
-        <Header step="OPTIONAL FINE PRINT" title="Before you" accent="commit..." />
+        <Header step="CANCELLATION FEE" />
         <p className="lead">
-          By proceeding, you acknowledge that cancelling after this point may result in a totally
-          fictional <strong>$300 cancellation fee</strong>.
-        </p>
-        <p className="muted">
-          This is a joke. There is no fee, no invoice, and no tiny lawyer hiding nearby.
+          By proceeding, you acknowledge that cancelling after this point will result in a <strong>$300 cancellation fee</strong>.
         </p>
         <div className="actions">
-          <Button onClick={submit}>I accept the imaginary terms</Button>
-          <Button secondary onClick={() => setStep(4)}>
+          <Button onClick={submit}>Accept terms & confirm</Button>
+          <Button secondary onClick={() => setStep(7)}>
             Let me reconsider
           </Button>
         </div>
