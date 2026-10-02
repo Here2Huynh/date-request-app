@@ -99,6 +99,17 @@ export function RecipientView({
       setStep(6)
     } else setStep(6)
   }
+  if (step === 7)
+    return (
+      <Shell>
+        <div className="frog" role="img" aria-label="Happy frog">
+          <span aria-hidden="true">&#x1F438;</span>
+        </div>
+        <Header step="Well, then." />
+        <p className="lead">You're paying 😛</p>
+        {preview && <PreviewBar onBack={onBack} onSend={onSend} />}
+      </Shell>
+    )
   if (step === 6) {
     if (declined)
       return (
@@ -128,7 +139,7 @@ export function RecipientView({
         </p>
         <div className="actions">
           <Button onClick={submit}>Accept terms & confirm</Button>
-          <Button secondary onClick={() => setStep(4)}>
+          <Button secondary onClick={() => setStep(7)}>
             Let me reconsider
           </Button>
         </div>
