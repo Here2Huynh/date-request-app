@@ -1,10 +1,11 @@
-import { useRef, useState, type MouseEvent } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import {
   datesBetween,
   dateLabel,
   getRequest,
   makeCalendarUrl,
   makeIcs,
+  timeLabel,
   updateRequest,
   type RequestData,
 } from '../../store'
@@ -16,14 +17,45 @@ import { Header } from '../../components/ui/Header'
 import { Shell } from '../../components/layout/Shell'
 
 export function RecipientPage({ id }: { id: string }) {
-  const request = getRequest(id)
+  const [request, setRequest] = useState<RequestData | null | undefined>(undefined)
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    let active = true
+    setRequest(undefined)
+    setError(false)
+    getRequest(id)
+      .then((value) => {
+        if (active) setRequest(value)
+      })
+      .catch(() => {
+        if (active) setError(true)
+      })
+    return () => {
+      active = false
+    }
+  }, [id])
+
+  if (error)
+    return (
+      <Shell>
+        <Header title="This link is" accent="taking a nap." />
+        <p className="lead">The local date server could not be reached. Check that it is running on the shared network.</p>
+      </Shell>
+    )
+  if (request === undefined)
+    return (
+      <Shell>
+        <Header title="Just a second" accent="loading your date." />
+        <p className="lead">Getting the invite ready...</p>
+      </Shell>
+    )
   if (!request)
     return (
       <Shell>
         <Header title="Hmm, this link" accent="wandered off." />
         <p className="lead">
-          This request is not in this browser yet. Create one here first, or ask the sender for a
-          fresh link.
+          This request could not be found. Ask the sender for a fresh link.
         </p>
         <Button onClick={() => (location.hash = 'create')}>Make a request</Button>
       </Shell>
@@ -49,6 +81,7 @@ export function RecipientView({
   const [step, setStep] = useState(0)
   const [selection, setSelection] = useState({ date: '', time: '', activity: '', food: '' })
   const [declined, setDeclined] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const [hintIndex, setHintIndex] = useState(0)
   const [noPosition, setNoPosition] = useState({ x: 0, y: 0 })
   const yesButtonRef = useRef<HTMLButtonElement>(null)
@@ -93,13 +126,26 @@ export function RecipientView({
     setHintIndex((current) => Math.min(current + 1, HINT_OPTIONS.length - 1))
     setNoPosition({ x: nextPosition.left - baseLeft, y: nextPosition.top - baseTop })
   }
-  const submit = () => {
-    if (!preview) {
-      updateRequest({ ...data, response: { ...selection, declined } })
-      setStep(6)
-    } else setStep(6)
+  const submit = async () => {
+    setSubmitError('')
+    try {
+      if (!preview) await updateRequest({ ...data, response: { ...selection, declined } })
+      setStep(7)
+    } catch {
+      setSubmitError('We could not save your answer. Please check the shared network and try again.')
+    }
   }
-  if (step === 7)
+  const decline = async () => {
+    setSubmitError('')
+    try {
+      if (!preview) await updateRequest({ ...data, response: { ...selection, declined: true } })
+      setDeclined(true)
+      setStep(7)
+    } catch {
+      setSubmitError('We could not send your response. Please check the shared network and try again.')
+    }
+  }
+  if (step === 8)
     return (
       <Shell>
         <div className="frog" role="img" aria-label="Happy frog">
@@ -110,14 +156,14 @@ export function RecipientView({
         {preview && <PreviewBar onBack={onBack} onSend={onSend} />}
       </Shell>
     )
-  if (step === 6) {
+  if (step === 7) {
     if (declined)
       return (
         <Shell>
           <div className="success-icon">🫡</div>
           <h1>Respectfully noted.</h1>
           <p className="lead">No hard feelings. The sender has been notified.</p>
-          <PreviewBar onBack={onBack} onSend={onSend} />
+          {preview && <PreviewBar onBack={onBack} onSend={onSend} />}
         </Shell>
       )
     return (
@@ -129,7 +175,7 @@ export function RecipientView({
       />
     )
   }
-  if (step === 5 && data.cancellationWarning)
+  if (step === 6 && data.cancellationWarning)
     return (
       <Shell>
         <div className="warning-icon">⚠️</div>
@@ -139,24 +185,26 @@ export function RecipientView({
         </p>
         <div className="actions">
           <Button onClick={submit}>Accept terms & confirm</Button>
-          <Button secondary onClick={() => setStep(7)}>
+          <Button secondary onClick={() => setStep(8)}>
             Let me reconsider
           </Button>
         </div>
+        {submitError && <p className="status">{submitError}</p>}
         {preview && <PreviewBar onBack={onBack} onSend={onSend} />}
       </Shell>
     )
-  if (step === 5)
+  if (step === 6)
     return (
       <Shell>
         <Header step="LAST LOOK" title="Ready to" accent="lock it in?" />
         <Summary data={data} selection={selection} />
         <div className="actions">
           <Button onClick={submit}>Submit my answer ♥</Button>
-          <Button secondary onClick={() => setStep(4)}>
+          <Button secondary onClick={() => setStep(5)}>
             Change something
           </Button>
         </div>
+        {submitError && <p className="status">{submitError}</p>}
         {preview && <PreviewBar onBack={onBack} onSend={onSend} />}
       </Shell>
     )
@@ -174,15 +222,13 @@ export function RecipientView({
             className="no-button"
             style={{ transform: `translate(${noPosition.x}px, ${noPosition.y}px)` }}
             onMouseEnter={dodgeNoButton}
-            onClick={() => {
-              setDeclined(true)
-              setStep(6)
-            }}
+            onClick={decline}
           >
             no
           </button>
         </div>
         <p className="hint">{HINT_OPTIONS[hintIndex]}</p>
+        {submitError && <p className="status">{submitError}</p>}
         {preview && <PreviewBar onBack={onBack} />}
       </Shell>
     )
@@ -197,6 +243,7 @@ export function RecipientView({
     )
   const titles = [
     ['So... when are you', 'free?'],
+    ['What time works', 'for you?'],
     ['What are we', 'doing?'],
     ['And what are we', 'eating?'],
   ][step - 2]
@@ -206,12 +253,14 @@ export function RecipientView({
         ? datesBetween(data.dateRange.start, data.dateRange.end)
         : data.dates
       : step === 3
-        ? data.activities
-        : data.foods
-  const key = step === 2 ? 'date' : step === 3 ? 'activity' : 'food'
+        ? data.times
+        : step === 4
+          ? data.activities
+          : data.foods
+  const key = step === 2 ? 'date' : step === 3 ? 'time' : step === 4 ? 'activity' : 'food'
   return (
     <Shell>
-      <Header step={`STEP ${step - 1} OF 3`} title={titles[0]} accent={titles[1]} />
+      <Header step={`STEP ${step - 1} OF 4`} title={titles[0]} accent={titles[1]} />
       <div className="option-grid">
         {options.map((value) => (
           <button
@@ -219,13 +268,13 @@ export function RecipientView({
             key={value}
             onClick={() => setSelection({ ...selection, [key]: value })}
           >
-            <span>{step === 2 ? '♡' : emojiFor(data, value)}</span>
-            {step === 2 ? dateLabel(value) : value}
+            <span>{step === 2 ? '♡' : step === 3 ? '◷' : emojiFor(data, value)}</span>
+            {step === 2 ? dateLabel(value) : step === 3 ? timeLabel(value) : value}
           </button>
         ))}
       </div>
       <Button disabled={!selection[key]} onClick={next}>
-        {step === 4 ? 'Continue' : 'Lock it in ♥'}
+        {step === 5 ? 'Continue' : 'Lock it in ♥'}
       </Button>
       {preview && <PreviewBar onBack={onBack} onSend={onSend} />}
     </Shell>

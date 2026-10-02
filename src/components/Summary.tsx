@@ -1,5 +1,5 @@
 import { emojiFor } from '../constants'
-import { dateLabel } from '../store'
+import { dateLabel, timeLabel } from '../store'
 import type { RequestData } from '../store'
 
 export function Summary({
@@ -17,12 +17,7 @@ export function Summary({
       </div>
       <div>
         <span>TIME</span>
-        <strong>
-          {new Date(`2026-01-01T${selection.time}`).toLocaleTimeString([], {
-            hour: 'numeric',
-            minute: '2-digit',
-          })}
-        </strong>
+        <strong>{timeLabel(selection.time)}</strong>
       </div>
       <div>
         <span>PLAN</span>

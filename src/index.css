@@ -207,6 +207,14 @@
     @apply flex gap-2;
   }
 
+  .time-range-add {
+    @apply flex flex-col gap-2.5 sm:flex-row sm:items-end;
+  }
+
+  .time-range-add .range-fields {
+    @apply min-w-0 flex-1;
+  }
+
   .time-input-wrap {
     @apply flex min-w-0 flex-1 items-center rounded-xl border border-[#edd8d9] bg-[#fffaf9] transition-all duration-200;
   }
@@ -224,7 +232,7 @@
   }
 
   .time-add-button {
-    @apply whitespace-nowrap px-4;
+    @apply h-12 whitespace-nowrap px-4;
   }
 
   .time-add-button:disabled {

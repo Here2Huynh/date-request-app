@@ -16,8 +16,8 @@ export function PreviewPage() {
       data={data}
       preview
       onBack={() => go('create')}
-      onSend={() => {
-        saveRequest(data)
+      onSend={async () => {
+        await saveRequest(data)
         sessionStorage.removeItem('yeah-maybe-draft')
         go(`manage/${data.id}`)
       }}
