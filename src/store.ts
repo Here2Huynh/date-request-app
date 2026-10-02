@@ -12,19 +12,44 @@ export type RequestData = {
   response?: { date: string; time: string; activity: string; food: string; declined?: boolean }
 }
 
-const KEY = 'yeah-maybe-requests'
-const read = (): RequestData[] => JSON.parse(localStorage.getItem(KEY) || '[]')
-const write = (items: RequestData[]) => localStorage.setItem(KEY, JSON.stringify(items))
+async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(path, {
+    ...init,
+    headers: { 'Content-Type': 'application/json', ...init?.headers },
+  })
+  if (!response.ok) {
+    const error = new Error((await response.json().catch(() => null))?.error || 'Request failed') as Error & {
+      status?: number
+    }
+    error.status = response.status
+    throw error
+  }
+  return response.json() as Promise<T>
+}
+
+export async function getRequest(id: string) {
+  try {
+    return await apiRequest<RequestData>(`/api/requests/${encodeURIComponent(id)}`)
+  } catch (error) {
+    if (error instanceof Error && 'status' in error && error.status === 404) return null
+    throw error
+  }
+}
 
 export function saveRequest(data: RequestData) {
-  write([...read().filter((item) => item.id !== data.id), data])
-  return data
+  return apiRequest<RequestData>(`/api/requests/${encodeURIComponent(data.id)}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
 }
-export function getRequest(id: string) {
-  return read().find((item) => item.id === id)
-}
+
 export function updateRequest(data: RequestData) {
   return saveRequest(data)
+}
+
+export async function getNetworkOrigin() {
+  const value = await apiRequest<{ networkOrigin: string }>('/api/info')
+  return value.networkOrigin
 }
 export function newId() {
   return crypto.randomUUID
@@ -52,10 +77,24 @@ export function datesBetween(start: string, end: string) {
   return result
 }
 
+export function timeStart(value: string) {
+  return value.split('-')[0]
+}
+
+export function timeLabel(value: string) {
+  const [start, end] = value.split('-')
+  const format = (time: string) =>
+    new Date(`2026-01-01T${time}`).toLocaleTimeString([], {
+      hour: 'numeric',
+      minute: '2-digit',
+    })
+  return end ? `${format(start)} – ${format(end)}` : format(start)
+}
+
 export function makeCalendarUrl(request: RequestData) {
   const response = request.response
   if (!response || response.declined) return ''
-  const start = new Date(`${response.date}T${response.time}:00`)
+  const start = new Date(`${response.date}T${timeStart(response.time)}:00`)
   const end = new Date(start.getTime() + 90 * 60 * 1000)
   const iso = (d: Date) =>
     d
@@ -70,7 +109,7 @@ export function makeCalendarUrl(request: RequestData) {
 export function makeIcs(request: RequestData) {
   const response = request.response
   if (!response || response.declined) return ''
-  const start = new Date(`${response.date}T${response.time}:00`)
+  const start = new Date(`${response.date}T${timeStart(response.time)}:00`)
   const end = new Date(start.getTime() + 90 * 60 * 1000)
   const iso = (d: Date) =>
     d
